@@ -1,0 +1,65 @@
+[
+  {
+    "createdAt": null,
+    "updatedAt": null,
+    "id": 1,
+    "firstName": "anchal",
+    "lastName": "mathur",
+    "doa": null,
+    "registrationNo": "2019\\6\\31\\690665",
+    "rollNo": 20190100,
+    "academicSessions": [],
+    "enabled": false,
+    "studentEmail": "abc@abc.com",
+    "parentEmail": "dgedgdeg@hdg.com",
+    "uuid": "519fb2b2-509b-41d3-ae63-b5b8b7b191a5"
+  },
+  {
+    "createdAt": null,
+    "updatedAt": null,
+    "id": 10,
+    "firstName": "anchal",
+    "lastName": "mathur",
+    "doa": null,
+    "registrationNo": "2019\\6\\31\\252667",
+    "rollNo": 20190101,
+    "academicSessions": [],
+    "enabled": false,
+    "studentEmail": "abc1@abc.com",
+    "parentEmail": "dgedgdeg1@hdg.com",
+    "uuid": "741ffaa8-c188-4415-8a90-180ffc8069bd"
+},
+{
+  "createdAt": null,
+  "updatedAt": null,
+  "id": 11,
+  "firstName": "uhfduifh",
+  "lastName": "huiohuih",
+  "doa": null,
+  "registrationNo": "2019\\6\\31\\19070",
+  "rollNo": 20190102,
+  "academicSessions": [],
+  "enabled": false,
+  "studentEmail": "fdgv@ysg.com",
+  "parentEmail": "iwhuihd@bcu.cuh",
+  "uuid": "1591edfa-31cc-4977-8ee8-ebc8e842a884"
+},
+{
+  "createdAt": null,
+  "updatedAt": null,
+  "id": 12,
+  "firstName": "fweuhfiu",
+  "lastName": "ijhepf",
+  "doa": null,
+  "registrationNo": "2019\\6\\31\\503693",
+  "rollNo": 20190103,
+  "academicSessions": [],
+  "enabled": false,
+  "studentEmail": "jddh@gu.com",
+  "parentEmail": "dwjhdui@euye.vhy",
+  "uuid": "8e9ef4a0-ee2b-4519-b5b3-76d56060e496"
+}
+  ]
+  
+
+  

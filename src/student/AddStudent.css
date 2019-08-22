@@ -1,0 +1,19 @@
+.add-student-form {
+    max-width: 520px;
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+.add-student-form-button {
+    width: 100%;
+}
+
+
+.add-student-form-row {
+    margin-bottom: 20px;
+}
+
+.add-student-form-row input, .add-student-form-row textarea {
+    max-width: 20px;
+    margin-bottom: 4px;
+}
