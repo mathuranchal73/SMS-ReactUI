@@ -389,7 +389,7 @@ validateStudentEmailAvailability() {
                 studentEmail: {
                     value: emailValue,
                     validateStatus: 'error',
-                    errorMsg: 'This Email for Student is already present in Systems'
+                    errorMsg: 'This Email for Student is already present in System'
                 }
             });
         }
