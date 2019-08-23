@@ -1,32 +1,69 @@
 import React, { Component } from 'react';
 import './Student.css';
-import { notification } from 'antd';
-import { updateStudent } from '../util/APIUtils';
+
+import { updateStudent,checkStudentEmailAvailability } from '../util/APIUtils';
+import { Form, Input, notification } from 'antd';
+import {   NAME_MIN_LENGTH, NAME_MAX_LENGTH,EMAIL_MAX_LENGTH } from '../constants';
+
+const FormItem = Form.Item;
 
 class EditStudent extends Component {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-                id: this.props.students.id,
-                registrationNo: this.props.students.registrationNo,
-                firstName: this.props.students.firstName,
-                lastName: this.props.students.lastName,
-                studentEmail: this.props.students.studentEmail,
-                parentEmail: this.props.students.parentEmail,
-                doa: this.props.students.doa,
-                academicSession:this.props.students.academicSession,
-                isEnabled: this.props.students.isEnabled,
-                rollNumber: this.props.students.rollNumber
-            
-        };
+        this.state={
+
+            id: {
+                value: ''
+            },
+            registrationNo: {
+                value: ''
+            },
+            firstName: {
+                value: ''
+            },
+            lastName: {
+                value: ''
+            },
+            studentEmail: {
+              value: ''
+            },
+            parentEmail: {
+              value: ''
+            },
+            doa: {
+                value: ''
+              },
+            academicSession: {
+                value: ''
+              },
+            rollNumber: {
+                value: ''
+              },
+              isEnabled:0
+          };
+
+          
+
         
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.validateStudentEmailAvailability = this.validateStudentEmailAvailability.bind(this);
+        this.isFormInvalid = this.isFormInvalid.bind(this);
+        this.handleCheckboxChange=this.handleCheckboxChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
       }
-     
-      handleChange(event) {
+
+      isFormInvalid() {
+        return !(this.state.firstName.validateStatus === 'success' && 
+            this.state.studentEmail.validateStatus === 'success' &&
+            this.state.parentEmail.validateStatus === 'success'
+            
+        );
+    }
+    
+    handleChange(event) {
         const name = event.target.name;
         const value = event.target.value;
         const defaultValue= event.target.defaultValue;
@@ -44,22 +81,67 @@ class EditStudent extends Component {
         }
       }
 
+    
+      handleCheckboxChange(event) {
+        const name = event.target.name;
+        const value = event.target.checked;
+        const defaultValue= event.target.defaultChecked;
+    
+        if(value)
+        {
+            this.setState({
+                [name]: value
+              })
+            
+        }
+        else{
+            this.setState({
+            [name]: defaultValue
+          })
+        }
+      }
+      
+    
+      handleInputChange(event, validationFun) {
+        const target = event.target;
+        const inputName = target.name;        
+        const inputValue = target.value;
+        const defaultValue= event.target.defaultValue;
 
+        if(inputValue)
+        {
+    
+        this.setState({
+            [inputName] : {
+                value: inputValue,
+                ...validationFun(inputValue)
+            }
+        });
+
+    }
+        else{
+            this.setState({
+            [inputName]: defaultValue,
+            ...validationFun(defaultValue)
+        });
+    }
+
+      }
       handleUpdate(event) {
         event.preventDefault();
         const studentData = {
-                id: this.state.id,
-                registrationNo: this.state.registrationNo,
-                firstName: this.state.firstName,
-                lastName: this.state.lastName,
-                studentEmail: this.state.studentEmail,
-                parentEmail: this.state.parentEmail,
-                doa: this.state.doa,
-                academicSession:this.state.academicSession,
-                isEnabled: this.state.isEnabled,
-                rollNumber: this.state.rollNumber
+                id: this.state.id.value,
+                registrationNo: this.state.registrationNo.value,
+                firstName: this.state.firstName.value,
+                lastName: this.state.lastName.value,
+                studentEmail: this.state.studentEmail.value,
+                parentEmail: this.state.parentEmail.value,
+                doa: this.state.doa.value,
+                academicSession:this.state.academicSession.value,
+                isEnabled: this.state.isEnabled.value,
+                rollNumber: this.state.rollNumber.value
         };
-        updateStudent(this.props.students.id,studentData)
+        updateStudent(this.state.students.id,studentData)
         .then(response => {
             notification.success({
               message: 'Polling App',
@@ -100,100 +182,122 @@ class EditStudent extends Component {
                                 <h4 className="card-title">Edit Student Record</h4>
                             </div>
                             <div className="card-body">
-                                <form onSubmit={this.handleUpdate}>
-                                    <div className="row">
+                                <Form onSubmit={this.handleUpdate} >
+                                <FormItem label="Registration Number (disabled)" className="add-student-form-row">
 
-                                    <div className="col-md-5 pr-1">
-                                    <div className="form-group">
-                                        <label>Registration Number (disabled)</label>
-                                        <input type="text" className="form-control" name="registrationNo" placeholder="Registration Number" defaultValue={this.props.students.registrationNo}/>
-                                    </div>                                                          
-                                    </div>
-                                                                                                
-                                    <div className="col-md-3 px-1">
-                                    <div className="form-group">
-                                        <label>Firstname</label>
-                                        <input type="text" className="form-control" name="firstName" placeholder="FirstName" defaultValue={this.props.students.firstName} onChange={this.handleChange}/>
-                                    </div>
-                                    </div>
-                                                                                               
-                                     <div className="col-md-4 pl-1">
-                                     <div className="form-group">
-                                        <label for="LastName">Last Name</label>
-                                        <input type="text" className="form-control" name="lastName" placeholder="LastName" defaultValue={this.props.students.lastName}
-                    onChange={this.handleChange}/>
-                                    </div>
-                                    </div>
-                            </div>
-                                                                                            
-                            <div className="row">
-                                <div className="col-md-6 pr-1">
-                                    <div className="form-group">
-                                        <label>Student Email</label>
-                                        <input type="text" className="form-control" name="studentEmail" placeholder="Student Email" defaultValue={this.props.students.studentEmail}
-                    onChange={this.handleChange}/>
-                                    </div>
-                                </div>
-                                <div className="col-md-6 pl-1">
-                                    <div className="form-group">
-                                        <label>Parent Email</label>
-                                        <input type="text" className="form-control" name="parentEmail" placeholder="Parent Email" defaultValue={this.props.students.parentEmail}
-                    onChange={this.handleChange}/>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div className="row">
-                                <div className="col-md-12">
-                                    <div className="form-group">
-                                        <label>Academic Session</label>
-                                        <select className="form-control"  name="academicSessions" placeholder="Academic Session" defaultValue={this.props.students.academicSessions}
-                    onChange={this.handleChange}>
-                                        <option selected value="2019-2020">2019-2020</option>
+                                        <Input type="text"
+                                        name="registrationNo"
+                                        size="large"
+                                        defaultValue={this.props.students.registrationNo} />   
+                                
+                                </FormItem>
+                                <FormItem label="First Name" 
+                                    validateStatus={this.state.firstName.validateStatus}
+                                    help={this.state.firstName.errorMsg} className="add-student-form-row">
+
+                                    <Input 
+                                    name="firstName"
+                                    size="large"
+                                    autoComplete="off"
+                                    placeholder="First Name"
+                                    defaultValue={this.props.students.firstName} 
+                                    onChange={(event) => this.handleInputChange(event, this.validateFirstName)} />   
+                        
+                                </FormItem>
+                                <FormItem label="Last Name" 
+                                    validateStatus={this.state.lastName.validateStatus}
+                                    help={this.state.lastName.errorMsg} className="add-student-form-row">
+                                    <Input 
+                                    name="lastName"
+                                    size="large"
+                                    autoComplete="off"
+                                    placeholder="Last Name"
+                                    defaultValue={this.props.students.lastName} 
+                                    onChange={(event) => this.handleChange(event)} />   
+                                </FormItem>
+                                <FormItem 
+                                    label="Student Email"
+                                    hasFeedback
+                                    validateStatus={this.state.studentEmail.validateStatus}
+                                    help={this.state.studentEmail.errorMsg}>
+                           
+                                    <Input 
+                                        size="large"
+                                        name="studentEmail" 
+                                        type="email" 
+                                        autoComplete="off"
+                                        placeholder="Student email"
+                                        defaultValue={this.props.students.studentEmail} 
+                                        onChange={(event) => this.handleInputChange(event, this.validateStudentEmail)} /> 
+                
+                                </FormItem>                                                                
+                                <FormItem 
+                                    label="Parent's Email"
+                                    hasFeedback
+                                    validateStatus={this.state.parentEmail.validateStatus}
+                                    help={this.state.parentEmail.errorMsg}>
+                                
+                                    <Input 
+                                        size="large"
+                                        name="parentEmail"
+                                        type="email" 
+                                        autoComplete="off"
+                                        placeholder="Parent's email"
+                                        defaultValue={this.props.students.parentEmail} 
+                                        onChange={(event) => this.handleInputChange(event, this.validateParentEmail)} /> 
+                
+                                </FormItem>
+                                <FormItem label="Joining Date">
+                           
+                                    <Input 
+                                        size="large"
+                                        name="doa"
+                                        type="date" 
+                                        defaultValue={this.props.students.doa} 
+                                        onClick={(event) => this.handleChange(event)} /> 
+                
+                                </FormItem>
+                                <FormItem label="Academic Session">
+                                    <select className="form-control"  name="academicSession" placeholder="Academic Session" defaultValue={this.props.students.academicSession}
+                                        onChange={this.handleChange}>
+                                        <option value="2019-2020">2019-2020</option>
                                         <option value="2018-2019">2018-2019</option>
                                         <option value="2017-2018">2017-2018</option>
                                         <option value="2016-2017">2016-2017</option>
-                                        </select>
-                                        
+                                    </select>  
+                                </FormItem> 
+                                <FormItem label="Roll Number">
+                           
+                                    <Input 
+                                        size="large"
+                                        name="rollNumber"
+                                        type="text" 
+                                        defaultValue={this.props.students.rollNo} 
+                                        onChange={(event) => this.handleChange(event)} /> 
+                
+                                </FormItem>                                                            
+                                <FormItem label="Is Enabled">
+                                    <Input 
+                                    size="large"
+                                    name="enabled"
+                                    type="checkbox" 
+                                    defaultChecked={this.props.students.enabled}
+                                    onClick={this.handleCheckboxChange} /> 
+                                </FormItem>      
+                                <FormItem>
+                                    <div className="form-group form-row mb-0">
+                                    <div className="offset-md-2 col-md-10">
+                                        <button
+                                        type="submit"
+                                        className="btn btn-primary d-block ml-auto"
+                                        disabled={this.isFormInvalid()}
+                                        >
+                                        Update Student
+                                        </button>
                                     </div>
-                                </div>
-                            </div>
-                                                                                            
-                            <div className="row">
-                                <div className="col-md-4 pr-1">
-                                    <div className="form-group">
-                                        <label>Roll Number</label>
-                                        <input type="text" className="form-control" name="rollNumber" placeholder="Roll Number" defaultValue={this.props.students.rollNo} onChange={this.handleChange}/>
                                     </div>
-                                </div>
-                                <div className="col-md-4 px-1">
-                                    <div className="form-group">
-                                        <label>Date of Admission</label>
-                                        <input type="date" className="form-control" name="doa" placeholder="Date of Admission" defaultValue={this.props.students.doa}
-                    onChange={this.handleChange}/>
-                                    </div>
-                                </div>
-                                <div className="col-md-4 pl-1">
-                                    <div className="form-group">
-                                        <label>Enabled</label>
-                                        <input type="checkbox" className="form-control" name="enabled" placeholder="Is Enabled" defaultValue={this.props.students.enabled} onC={this.handleChange}/>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="col-md-12">
-                                        <div className="form-group">
-                                            <label>About Me</label>
-                                            <textarea rows="4" cols="80" className="form-control" placeholder="Here can be your description" value="ÄBC">Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</textarea>
-                                        </div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="id" value={this.props.students.id} />
-                            <button type="submit" className="btn btn-info btn-fill pull-right">Update Profile</button>
-                                                                                            
-                            <div className="clearfix"></div>
-                       </form>
+                                </FormItem>                                                       
+                                </Form>
                 </div>
             </div>
         </div>
@@ -208,7 +312,143 @@ class EditStudent extends Component {
         </div>  
         </div>  
         );  
-        }  
+        }
+        
+        
+
+        validateFirstName = (firstName) => {
+            if(firstName.length < NAME_MIN_LENGTH) {
+                return {
+                    validateStatus: 'error',
+                    errorMsg: `Name is too short (Minimum ${NAME_MIN_LENGTH} characters needed.)`
+                }
+            } else if (firstName.length > NAME_MAX_LENGTH) {
+                return {
+                    validationStatus: 'error',
+                    errorMsg: `Name is too long (Maximum ${NAME_MAX_LENGTH} characters allowed.)`
+                }
+            } else {
+                return {
+                    validateStatus: 'success',
+                    errorMsg: null,
+                  };            
+            }
+        }
+        
+        validateStudentEmail = (studentEmail) => {
+            if(!studentEmail) {
+                return {
+                    validateStatus: 'error',
+                    errorMsg: 'Email may not be empty'                
+                }
+            }
+        
+            const EMAIL_REGEX = RegExp('[^@ ]+@[^@ ]+\\.[^@ ]+');
+            if(!EMAIL_REGEX.test(studentEmail)) {
+                return {
+                    validateStatus: 'error',
+                    errorMsg: 'Email not valid'
+                }
+            }
+        
+            if(studentEmail.length > EMAIL_MAX_LENGTH) {
+                return {
+                    validateStatus: 'error',
+                    errorMsg: `Email is too long (Maximum ${EMAIL_MAX_LENGTH} characters allowed)`
+                }
+            }
+        
+            return {
+                validateStatus: 'success',
+                errorMsg: null
+            }
+        }
+        
+        validateParentEmail = (parentEmail) => {
+          if(!parentEmail) {
+              return {
+                  validateStatus: 'error',
+                  errorMsg: 'Email may not be empty'                
+              }
+          }
+        
+          const EMAIL_REGEX = RegExp('[^@ ]+@[^@ ]+\\.[^@ ]+');
+          if(!EMAIL_REGEX.test(parentEmail)) {
+              return {
+                  validateStatus: 'error',
+                  errorMsg: 'Email not valid'
+              }
+          }
+        
+          if(parentEmail.length > EMAIL_MAX_LENGTH) {
+              return {
+                  validateStatus: 'error',
+                  errorMsg: `Email is too long (Maximum ${EMAIL_MAX_LENGTH} characters allowed)`
+              }
+          }
+        
+          return {
+              validateStatus: 'success',
+              errorMsg: null
+          }
+        }
+        
+        
+        validateStudentEmailAvailability() {
+            // First check for client side errors in email
+            const emailValue = this.state.studentEmail.value;
+            const emailValidation = this.validateStudentEmail(emailValue);
+        
+            if(emailValidation.validateStatus === 'error') {
+                this.setState({
+                    studentEmail: {
+                        value: emailValue,
+                        ...emailValidation
+                    }
+                });    
+                return;
+            }
+        
+            this.setState({
+                email: {
+                    value: emailValue,
+                    validateStatus: 'validating',
+                    errorMsg: null
+                }
+            });
+        
+            checkStudentEmailAvailability(emailValue)
+            .then(response => {
+                if(response.available) {
+                    this.setState({
+                        studentEmail: {
+                            value: emailValue,
+                            validateStatus: 'success',
+                            errorMsg: null
+                        }
+                    });
+                } else {
+                    this.setState({
+                        studentEmail: {
+                            value: emailValue,
+                            validateStatus: 'error',
+                            errorMsg: 'This Email for Student is already present in Systems'
+                        }
+                    });
+                }
+            }).catch(error => {
+                // Marking validateStatus as success, Form will be recchecked at server
+                this.setState({
+                    studentEmail: {
+                        value: emailValue,
+                        validateStatus: 'success',
+                        errorMsg: null
+                    }
+                });
+            });
+        }
+        
+
         }  
 
         export default EditStudent;

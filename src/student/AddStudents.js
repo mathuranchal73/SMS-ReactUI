@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import { createStudent,checkStudentEmailAvailability } from '../util/APIUtils';
-import { Form, Input,Button, notification } from 'antd';
+import { Form, Input, notification } from 'antd';
 import {   NAME_MIN_LENGTH, NAME_MAX_LENGTH,EMAIL_MAX_LENGTH } from '../constants';
 import './Student.css';
 
@@ -38,6 +38,8 @@ class AddStudents extends Component {
 
           enabled:0
         }
+
+
         this.handleInputChange = this.handleInputChange.bind(this);
         this.validateStudentEmailAvailability = this.validateStudentEmailAvailability.bind(this);
         this.isFormInvalid = this.isFormInvalid.bind(this);
@@ -49,6 +51,9 @@ class AddStudents extends Component {
 
      
     handleAdd(event) {
+        var curr = new Date();
+        curr.setDate(curr.getDate());
+        var date = curr.toISOString().substr(0,10);
       event.preventDefault();
   
       const studentDataRequest = {
@@ -78,15 +83,28 @@ class AddStudents extends Component {
         }
     });
 
-          this.setState({
-            firstName: '',
-            lastName: '',
-            studentEmail: '',
-            parentEmail: '',
-            doa: '',
-            academicSessions:'',
-            enabled:false
-        });
+    this.state = {
+        firstName: {
+            value: ''
+        },
+        lastName: {
+            value: ''
+        },
+        studentEmail: {
+            value: ''
+        },
+        parentEmail: {
+            value: ''
+        },
+        doa: {
+          value: date
+        },
+        academicSessions: {
+          value: '2019-2020'
+        },
+
+        enabled:0
+      }
         this.props.toggleForm();
 
   }
@@ -114,7 +132,6 @@ class AddStudents extends Component {
   handleCheckboxChange(event) {
     const target = event.target;
     const inputName = target.name;
-    //const inputValue = target.checked;
 
     this.setState({
       [inputName]:!this.state.enabled.value
