@@ -135,6 +135,12 @@ export function checkEmailAvailability(email) {
     });
 }
 
+export function checkStudentEmailAvailability(email) {
+    return request({
+        url: STUDENT_API_BASE_URL + "checkStudentEmailAvailability?studentEmail=" + email,
+        method: 'GET'
+    });
+}
 
 export function getCurrentUser() {
     if(!localStorage.getItem(ACCESS_TOKEN)) {

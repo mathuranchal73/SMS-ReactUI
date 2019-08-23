@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FaPlus } from 'react-icons/fa';
-import { createStudent,checkEmailAvailability } from '../util/APIUtils';
+import { createStudent,checkStudentEmailAvailability } from '../util/APIUtils';
 import { Form, Input,Button, notification } from 'antd';
 import {   NAME_MIN_LENGTH, NAME_MAX_LENGTH,EMAIL_MAX_LENGTH } from '../constants';
 import './Student.css';
@@ -30,19 +30,18 @@ class AddStudents extends Component {
               value: ''
           },
           doa: {
-            value: ''
+            value: date
           },
           academicSessions: {
             value: '2019-2020'
           },
 
-          enabled: {
-            value: false
-          }
+          enabled:0
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.validateStudentEmailAvailability = this.validateStudentEmailAvailability.bind(this);
         this.isFormInvalid = this.isFormInvalid.bind(this);
+        this.handleCheckboxChange=this.handleCheckboxChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
         
@@ -66,8 +65,8 @@ class AddStudents extends Component {
           notification.success({
               message: 'Polling App',
               description: "Student Successfully Added!",
-          });          
-          this.props.history.push("/student");
+          });   
+          this.props.history.push("/");       
       }).catch(error => {
         if(error.status === 401) {
             this.props.handleLogout('/login', 'error', 'You have been logged out. Please login create student.');    
@@ -115,12 +114,10 @@ class AddStudents extends Component {
   handleCheckboxChange(event) {
     const target = event.target;
     const inputName = target.name;
-    const inputValue = target.checked;
+    //const inputValue = target.checked;
 
     this.setState({
-      [inputName]: {
-        value: inputValue
-    }
+      [inputName]:!this.state.enabled.value
     });
   }
   
@@ -217,7 +214,6 @@ class AddStudents extends Component {
                                 autoComplete="off"
                                 placeholder="Parent's email"
                                 value={this.state.parentEmail.value} 
-                                onBlur={this.validateParentEmailAvailability}
                                 onChange={(event) => this.handleInputChange(event, this.validateParentEmail)} /> 
                 
                                 </FormItem>
@@ -230,13 +226,12 @@ class AddStudents extends Component {
                                 name="doa"
                                 type="date" 
                                 value={this.state.doa.value} 
-                                onBlur={this.validateParentEmailAvailability}
-                                onChange={(event) => this.handleChange(event)} /> 
+                                onClick={(event) => this.handleChange(event)} /> 
                 
                                 </FormItem>
 
                                 <FormItem label="Academic Session">
-                                <select className="form-control"  name="academicSessions" placeholder="Academic Session" defaultValue={this.state.academicSessions}
+                                <select className="form-control"  name="academicSessions" placeholder="Academic Session" value={this.state.academicSessions.value}
                     onChange={this.handleChange}>
                                         <option selected value="2019-2020">2019-2020</option>
                                         <option value="2018-2019">2018-2019</option>
@@ -374,7 +369,7 @@ validateStudentEmailAvailability() {
         }
     });
 
-    checkEmailAvailability(emailValue)
+    checkStudentEmailAvailability(emailValue)
     .then(response => {
         if(response.available) {
             this.setState({
@@ -389,7 +384,7 @@ validateStudentEmailAvailability() {
                 studentEmail: {
                     value: emailValue,
                     validateStatus: 'error',
-                    errorMsg: 'This Email for Student is already present in System'
+                    errorMsg: 'This Email for Student is already present in Systems'
                 }
             });
         }
