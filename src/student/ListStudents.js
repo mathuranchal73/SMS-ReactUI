@@ -123,7 +123,7 @@ class ListStudents extends Component {
                       </Grid>
                       </div>                               
                   
-                      {this.state.showPopup ? <EditStudent closePopup={this.togglePopup.bind(this)} students={this.state.students} updateStudent={this.props.updateStudent}/> : null}  
+                      {this.state.showPopup ? <EditStudent closePopup={this.togglePopup.bind(this)} students={this.state.students}/> : null}  
                 </div>     
               
         );

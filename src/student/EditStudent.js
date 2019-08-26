@@ -7,13 +7,32 @@ import {   NAME_MIN_LENGTH, NAME_MAX_LENGTH,EMAIL_MAX_LENGTH } from '../constant
 
 const FormItem = Form.Item;
 
+
+
 class EditStudent extends Component {
+
+    
 
     constructor(props) {
         super(props);
 
         this.state={
 
+            studentData:{ 
+                createdAt:'',
+                createdBy:'',
+                updatedAt:'',
+                updatedby:'',
+                id: '',
+                registrationNo: '',
+                firstName: '',
+                lastName: '',
+                studentEmail: '',
+                parentEmail: '',
+                doa: '',
+                academicSession:'',
+                enabled: '',
+                rollNumber: ''},
             id: {
                 value: ''
             },
@@ -50,6 +69,7 @@ class EditStudent extends Component {
               enabled:''
           };
 
+         
         this.handleBeforeChange=this.handleBeforeChange.bind(this);        
         this.handleInputChange = this.handleInputChange.bind(this);
         this.validateStudentEmailAvailability = this.validateStudentEmailAvailability.bind(this);
@@ -59,7 +79,7 @@ class EditStudent extends Component {
         this.handleUpdate = this.handleUpdate.bind(this);
       }
 
-      
+     
 
       isFormInvalid() {
         
@@ -93,7 +113,6 @@ class EditStudent extends Component {
         }
         
       }
-
     
       handleCheckboxChange(event) {
         const name = event.target.name;
@@ -215,12 +234,13 @@ class EditStudent extends Component {
                                         name="registrationNo"
                                         size="large"
                                         disabled="true"
+                                        onBlur={(event)=>this.handleBeforeChange(event)}
                                         defaultValue={this.props.students.registrationNo} />   
                                 
                                 </FormItem>
                                 <FormItem label="First Name" 
                                     validateStatus={this.state.firstName.validateStatus}
-                                    help={this.state.firstName.errorMsg} className="add-student-form-row">
+                                    help={this.state.firstName.errorMsg} className="add-student-form-row" >
 
                                     <Input 
                                     name="firstName"
@@ -228,7 +248,7 @@ class EditStudent extends Component {
                                     autoComplete="off"
                                     placeholder="First Name"
                                     onFocus={(event)=>this.handleBeforeChange(event)}
-                                    defaultValue={this.props.students.firstName} 
+                                    defaultValue={this.props.students.firstName}  
                                     onChange={(event) => this.handleInputChange(event, this.validateFirstName)} />   
                         
                                 </FormItem>
