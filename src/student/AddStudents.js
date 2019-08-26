@@ -248,7 +248,7 @@ class AddStudents extends Component {
                                 </FormItem>
 
                                 <FormItem label="Academic Session">
-                                <select className="form-control"  name="academicSessions" placeholder="Academic Session" value={this.state.academicSessions.value}
+                                <select className="form-control" name="academicSessions" placeholder="Academic Session" value={this.state.academicSessions.value}
                     onChange={this.handleChange}>
                                         <option selected value="2019-2020">2019-2020</option>
                                         <option value="2018-2019">2018-2019</option>

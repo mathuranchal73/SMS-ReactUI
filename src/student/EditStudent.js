@@ -21,16 +21,22 @@ class EditStudent extends Component {
                 value: ''
             },
             firstName: {
-                value: ''
+                value: '',
+                validateStatus: 'success',
+                errorMsg: null
             },
             lastName: {
                 value: ''
             },
             studentEmail: {
-              value: ''
+              value: '',
+              validateStatus: 'success',
+              errorMsg: null
             },
             parentEmail: {
-              value: ''
+              value: '',
+              validateStatus: 'success',
+              errorMsg: null
             },
             doa: {
                 value: ''
@@ -41,12 +47,10 @@ class EditStudent extends Component {
             rollNumber: {
                 value: ''
               },
-              isEnabled:0
+              enabled:''
           };
 
-          
-
-        
+        this.handleBeforeChange=this.handleBeforeChange.bind(this);        
         this.handleInputChange = this.handleInputChange.bind(this);
         this.validateStudentEmailAvailability = this.validateStudentEmailAvailability.bind(this);
         this.isFormInvalid = this.isFormInvalid.bind(this);
@@ -55,7 +59,10 @@ class EditStudent extends Component {
         this.handleUpdate = this.handleUpdate.bind(this);
       }
 
+      
+
       isFormInvalid() {
+        
         return !(this.state.firstName.validateStatus === 'success' && 
             this.state.studentEmail.validateStatus === 'success' &&
             this.state.parentEmail.validateStatus === 'success'
@@ -64,21 +71,27 @@ class EditStudent extends Component {
     }
     
     handleChange(event) {
-        const name = event.target.name;
-        const value = event.target.value;
+        const target = event.target;
+        const inputName = target.name;        
+        const inputValue = target.value;
         const defaultValue= event.target.defaultValue;
-        if(value)
+
+        if(inputValue)
+        {
+    
+        this.setState({
+            [inputName] : {
+                value: inputValue
+            }
+        });
+        }
+        else
         {
             this.setState({
-                [name]: value
-              })
-            
+            [inputName]: defaultValue
+        });
         }
-        else{
-            this.setState({
-            [name]: defaultValue
-          })
-        }
+        
       }
 
     
@@ -101,6 +114,18 @@ class EditStudent extends Component {
         }
       }
       
+      handleBeforeChange(event){
+        const target = event.target;
+        const inputName = target.name;        
+        const defaultValue= event.target.defaultValue;
+
+        this.setState({
+
+            [inputName] : {
+                value: defaultValue
+            }
+        });
+      }
     
       handleInputChange(event, validationFun) {
         const target = event.target;
@@ -186,8 +211,10 @@ class EditStudent extends Component {
                                 <FormItem label="Registration Number (disabled)" className="add-student-form-row">
 
                                         <Input type="text"
+                                        autoFocus="true"
                                         name="registrationNo"
                                         size="large"
+                                        disabled="true"
                                         defaultValue={this.props.students.registrationNo} />   
                                 
                                 </FormItem>
@@ -200,6 +227,7 @@ class EditStudent extends Component {
                                     size="large"
                                     autoComplete="off"
                                     placeholder="First Name"
+                                    onFocus={(event)=>this.handleBeforeChange(event)}
                                     defaultValue={this.props.students.firstName} 
                                     onChange={(event) => this.handleInputChange(event, this.validateFirstName)} />   
                         
@@ -212,6 +240,7 @@ class EditStudent extends Component {
                                     size="large"
                                     autoComplete="off"
                                     placeholder="Last Name"
+                                    onFocus={(event)=>this.handleBeforeChange(event)}
                                     defaultValue={this.props.students.lastName} 
                                     onChange={(event) => this.handleChange(event)} />   
                                 </FormItem>
@@ -228,6 +257,7 @@ class EditStudent extends Component {
                                         autoComplete="off"
                                         placeholder="Student email"
                                         defaultValue={this.props.students.studentEmail} 
+                                        onFocus={(event)=>this.handleBeforeChange(event)}
                                         onChange={(event) => this.handleInputChange(event, this.validateStudentEmail)} /> 
                 
                                 </FormItem>                                                                
@@ -244,6 +274,7 @@ class EditStudent extends Component {
                                         autoComplete="off"
                                         placeholder="Parent's email"
                                         defaultValue={this.props.students.parentEmail} 
+                                        onFocus={(event)=>this.handleBeforeChange(event)}
                                         onChange={(event) => this.handleInputChange(event, this.validateParentEmail)} /> 
                 
                                 </FormItem>
@@ -253,12 +284,13 @@ class EditStudent extends Component {
                                         size="large"
                                         name="doa"
                                         type="date" 
-                                        defaultValue={this.props.students.doa} 
+                                        defaultValue={this.props.students.doa}
+                                        onFocus={(event)=>this.handleBeforeChange(event)} 
                                         onClick={(event) => this.handleChange(event)} /> 
                 
                                 </FormItem>
                                 <FormItem label="Academic Session">
-                                    <select className="form-control"  name="academicSession" placeholder="Academic Session" defaultValue={this.props.students.academicSession}
+                                    <select className="form-control" onFocus={(event)=>this.handleBeforeChange(event)} defaultValue={this.props.students.academicSession}  name="academicSession" placeholder="Academic Session" defaultValue={this.props.students.academicSession}
                                         onChange={this.handleChange}>
                                         <option value="2019-2020">2019-2020</option>
                                         <option value="2018-2019">2018-2019</option>
@@ -272,6 +304,7 @@ class EditStudent extends Component {
                                         size="large"
                                         name="rollNumber"
                                         type="text" 
+                                        onFocus={(event)=>this.handleBeforeChange(event)}
                                         defaultValue={this.props.students.rollNo} 
                                         onChange={(event) => this.handleChange(event)} /> 
                 
@@ -317,14 +350,16 @@ class EditStudent extends Component {
         
 
         validateFirstName = (firstName) => {
+            
             if(firstName.length < NAME_MIN_LENGTH) {
                 return {
                     validateStatus: 'error',
                     errorMsg: `Name is too short (Minimum ${NAME_MIN_LENGTH} characters needed.)`
                 }
-            } else if (firstName.length > NAME_MAX_LENGTH) {
+            }
+            else if (firstName.length > NAME_MAX_LENGTH) {
                 return {
-                    validationStatus: 'error',
+                    validateStatus: 'error',
                     errorMsg: `Name is too long (Maximum ${NAME_MAX_LENGTH} characters allowed.)`
                 }
             } else {
@@ -336,9 +371,9 @@ class EditStudent extends Component {
         }
         
         validateStudentEmail = (studentEmail) => {
-            if(!studentEmail) {
+            if(studentEmail.length< NAME_MIN_LENGTH) {
                 return {
-                    validateStatus: 'error',
+                    validateStatus:'error',
                     errorMsg: 'Email may not be empty'                
                 }
             }
