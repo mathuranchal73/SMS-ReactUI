@@ -8,6 +8,7 @@ const request = (options) => {
     
     if(localStorage.getItem(ACCESS_TOKEN)) {
         headers.append('Authorization', 'Bearer ' + localStorage.getItem(ACCESS_TOKEN))
+      //headers.append('Authorization', localStorage.getItem(ACCESS_TOKEN))
     }
 
     const defaults = {headers: headers};
@@ -107,7 +108,8 @@ export function castVote(voteData) {
 
 export function login(loginRequest) {
     return request({
-        url: AUTH_API_BASE_URL + "/auth/signin",
+        //url: AUTH_API_BASE_URL + "/auth/signin",
+        url: AUTH_API_BASE_URL + "/signin",
         method: 'POST',
         body: JSON.stringify(loginRequest)
     });
@@ -115,7 +117,7 @@ export function login(loginRequest) {
 
 export function signup(signupRequest) {
     return request({
-        url: USER_API_BASE_URL + "/user/signup",
+        url: USER_API_BASE_URL + "/signup",
         method: 'POST',
         body: JSON.stringify(signupRequest)
     });
@@ -123,14 +125,14 @@ export function signup(signupRequest) {
 
 export function checkUsernameAvailability(username) {
     return request({
-        url: USER_API_BASE_URL + "/user/checkUsernameAvailability?username=" + username,
+        url: USER_API_BASE_URL + "/checkUsernameAvailability?username=" + username,
         method: 'GET'
     });
 }
 
 export function checkEmailAvailability(email) {
     return request({
-        url: USER_API_BASE_URL + "/user/checkEmailAvailability?email=" + email,
+        url: USER_API_BASE_URL + "/checkEmailAvailability?email=" + email,
         method: 'GET'
     });
 }
@@ -148,14 +150,15 @@ export function getCurrentUser() {
     }
 
     return request({
-        url: USER_API_BASE_URL + "/user/me",
+       // url: USER_API_BASE_URL + "/user/me",
+       url: USER_API_BASE_URL + "/me",
         method: 'GET'
     });
 }
 
 export function getUserProfile(username) {
     return request({
-        url: USER_API_BASE_URL + "/user/" + username,
+        url: USER_API_BASE_URL + "/" + username,
         method: 'GET'
     });
 }

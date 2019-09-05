@@ -1,10 +1,13 @@
-export const AUTH_API_BASE_URL = 'http://localhost:8182/api';
-export const USER_API_BASE_URL = 'http://localhost:8184/api';
-export const POLL_API_BASE_URL = 'http://localhost:8187/api';
-export const PROFILE_API_BASE_URL = 'http://localhost:8181/v1/user';
-export const STUDENT_API_BASE_URL = 'http://localhost:8192/v1/student/';
+export const ZUUL_GATEWAY_BASE_URL='http://localhost:8085';
+export const AUTH_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/api';
+export const USER_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/user-api/'+'v1/user';
+export const POLL_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/poll-api/'+'api';
+export const PROFILE_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/user-api/'+'v1/user';
+export const STUDENT_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/student-api/'+'v1/student/';
 
-export const API_BASE_URL = '/api';
+
+
+//export const API_BASE_URL = '/api';
 export const ACCESS_TOKEN = 'accessToken';
 
 export const POLL_LIST_SIZE = 30;
