@@ -4,9 +4,12 @@ import { Navbar } from "react-bootstrap";
 import AdminNavbarLinks from "./AdminNavbarLinks.jsx";
 
 class Header extends Component {
+
+
   constructor(props) {
     super(props);
     this.mobileSidebarToggle = this.mobileSidebarToggle.bind(this);
+    this.handleMenuClick = this.handleMenuClick.bind(this);
     this.state = {
       sidebarExists: false
     };
