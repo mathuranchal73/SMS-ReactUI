@@ -6,6 +6,7 @@ import Icons from "./views/Icons.jsx";
 import Maps from "./views/Maps.jsx";
 import Notifications from "./views/Notifications.jsx";
 import Upgrade from "./views/Upgrade.jsx";
+import Login from "./user/login/Login.js"
 
 const dashboardRoutes = [
   {
@@ -64,7 +65,16 @@ const dashboardRoutes = [
     icon: "pe-7s-rocket",
     component: Upgrade,
     layout: "/admin"
-  }
+  },
+  {
+    path: "/login",
+    name: "Login",
+    icon: "pe-7s-bell",
+    component: Login,
+    layout: "/admin"
+  },
+
+  
 ];
 
 export default dashboardRoutes;

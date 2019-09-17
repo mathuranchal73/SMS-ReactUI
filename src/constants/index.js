@@ -1,5 +1,6 @@
 export const ZUUL_GATEWAY_BASE_URL='http://localhost:8085';
-export const AUTH_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/api';
+//export const AUTH_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/api';
+export const AUTH_API_BASE_URL = 'http://localhost:8182/api/auth'
 export const USER_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/user-api/'+'v1/user';
 export const POLL_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/poll-api/'+'api';
 export const PROFILE_API_BASE_URL = ZUUL_GATEWAY_BASE_URL+'/user-api/'+'v1/user';

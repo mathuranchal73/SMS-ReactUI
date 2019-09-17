@@ -9,7 +9,6 @@ class Header extends Component {
   constructor(props) {
     super(props);
     this.mobileSidebarToggle = this.mobileSidebarToggle.bind(this);
-    this.handleMenuClick = this.handleMenuClick.bind(this);
     this.state = {
       sidebarExists: false
     };
@@ -30,6 +29,8 @@ class Header extends Component {
     };
     document.body.appendChild(node);
   }
+
+  
   render() {
     return (
       <Navbar fluid>

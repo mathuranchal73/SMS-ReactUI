@@ -1,7 +1,75 @@
 import React, { Component } from "react";
 import { NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
+import {
+  Link,
+  withRouter
+} from 'react-router-dom';
+import NotificationSystem from "react-notification-system";
+import { ACCESS_TOKEN } from '../../constants';
+
+
+import routes from "../../routes.js";
 
 class AdminNavbarLinks extends Component {
+
+ 
+
+  constructor(props) {
+    super(props);   
+    this.state = {
+      _notificationSystem: null
+    };
+    this.handleLogIn=this.handleLogIn.bind(this);
+    this.handleSignUp=this.handleSignUp.bind(this);
+}
+
+  handleSignUp(redirectTo="/signup") {
+
+    this.setState({
+      currentUser: null,
+      isAuthenticated: false
+    });
+
+    this.props.history.push(redirectTo);
+    
+  }
+
+  handleLogIn(redirectTo="/login") {
+    localStorage.removeItem(ACCESS_TOKEN);
+
+    this.setState({
+      currentUser: null,
+      isAuthenticated: false
+    });
+
+    this.props.history.push(redirectTo);
+    
+  }
+
+  handleLogout(redirectTo="/") {
+    localStorage.removeItem(ACCESS_TOKEN);
+
+    this.setState({
+      currentUser: null,
+      isAuthenticated: false
+    });
+
+    this.props.history.push(redirectTo);
+    
+    this.state._notificationSystem.addNotification({
+      title: <span data-notify="icon" className="pe-7s-gift" />,
+      message: (
+        <div>
+         You're successfully logged out.
+        </div>
+      ),
+      level: "success",
+      position: "right",
+      autoDismiss: 15
+    });
+  }
+
+
   render() {
     const notification = (
       <div>
@@ -11,6 +79,7 @@ class AdminNavbarLinks extends Component {
         <p className="hidden-lg hidden-md">Notification</p>
       </div>
     );
+    if(this.props.currentUser) {
     return (
       <div>
         <Nav>
@@ -41,9 +110,10 @@ class AdminNavbarLinks extends Component {
           </NavItem>
           <NavDropdown
             eventKey={2}
-            title="Dropdown"
+            title="Username"
             id="basic-nav-dropdown-right"
           >
+         
             <MenuItem eventKey={2.1}>Action</MenuItem>
             <MenuItem eventKey={2.2}>Another action</MenuItem>
             <MenuItem eventKey={2.3}>Something</MenuItem>
@@ -58,7 +128,20 @@ class AdminNavbarLinks extends Component {
         </Nav>
       </div>
     );
+    }
+    else {
+      return (
+      <Nav pullRight>
+      <NavItem >
+      <Link to="/login">Login</Link>
+          </NavItem>
+       <NavItem >
+         <Link to="/signup">SignUp</Link> 
+          </NavItem>
+      </Nav>
+      );
+    }
   }
 }
 
-export default AdminNavbarLinks;
+export default  withRouter(AdminNavbarLinks);

@@ -7,11 +7,13 @@ import { getCurrentUser } from '../util/APIUtils';
 import { ACCESS_TOKEN } from '../constants';
 import LoadingIndicator from '../common/LoadingIndicator';
 
-import Login from '../user/login/Login';
 import AdminNavbar from "../components/Navbars/AdminNavbar";
 import Footer from "../components/Footer/Footer";
 import Sidebar from "../components/Sidebar/Sidebar";
 import FixedPlugin from "../components/FixedPlugin/FixedPlugin.jsx";
+
+import NotFound from "../common/NotFound.js"
+import Login from "../user/login/Login.js";
 
 import { style } from "../variables/Variables.jsx";
 
@@ -24,20 +26,45 @@ class Admin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentUser: null,
-      isAuthenticated: false,
-      isLoading: false,
       _notificationSystem: null,
       image: image,
       color: "black",
       hasImage: true,
       fixedClasses: "dropdown show-dropdown open"
     };
-    this.handleLogout = this.handleLogout.bind(this);
-    this.loadCurrentUser = this.loadCurrentUser.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
-   
   }
+  handleNotificationClick = position => {
+    var color = Math.floor(Math.random() * 4 + 1);
+    var level;
+    switch (color) {
+      case 1:
+        level = "success";
+        break;
+      case 2:
+        level = "warning";
+        break;
+      case 3:
+        level = "error";
+        break;
+      case 4:
+        level = "info";
+        break;
+      default:
+        break;
+    }
+    this.state._notificationSystem.addNotification({
+      title: <span data-notify="icon" className="pe-7s-gift" />,
+      message: (
+        <div>
+          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
+          every web developer.
+        </div>
+      ),
+      level: level,
+      position: position,
+      autoDismiss: 15
+    });
+  };
 
   loadCurrentUser() {
     this.setState({
@@ -56,36 +83,7 @@ class Admin extends Component {
       });  
     });
   }
-  
-  handleLogin() {
-    this.state._notificationSystem.addNotification({
-      title: <span data-notify="icon" className="pe-7s-gift" />,
-      message: (
-        <div>
-          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-          every web developer.
-        </div>
-      ),
-      level: "success",
-      position: "right",
-      autoDismiss: 15
-    });
-    this.loadCurrentUser();
-    this.props.history.push("/");
-  }
 
-  handleLogout(redirectTo="/") {
-    localStorage.removeItem(ACCESS_TOKEN);
-
-    this.setState({
-      currentUser: null,
-      isAuthenticated: false
-    });
-
-    this.props.history.push(redirectTo);
-    
-    
-  }
 
   handleNotificationClick = position => {
     var color = Math.floor(Math.random() * 4 + 1);
@@ -168,7 +166,6 @@ class Admin extends Component {
     }
   };
   componentDidMount() {
-    this.loadCurrentUser();
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     var _notificationSystem = this.refs.notificationSystem;
     var color = Math.floor(Math.random() * 4 + 1);
@@ -189,18 +186,7 @@ class Admin extends Component {
       default:
         break;
     }
-    _notificationSystem.addNotification({
-      title: <span data-notify="icon" className="pe-7s-gift" />,
-      message: (
-        <div>
-          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-          every web developer.
-        </div>
-      ),
-      level: level,
-      position: "tr",
-      autoDismiss: 15
-    });
+    
   }
   componentDidUpdate(e) {
     if (
@@ -216,10 +202,9 @@ class Admin extends Component {
       this.refs.mainPanel.scrollTop = 0;
     }
   }
+
   render() {
-    if(this.state.isLoading) {
-      return <LoadingIndicator />
-    }
+    if(this.props.currentUser) {
     return (
       <div className="wrapper">
         <NotificationSystem ref="notificationSystem" style={style} />
@@ -248,6 +233,10 @@ class Admin extends Component {
         </div>
       </div>
     );
+  }
+  else {
+    return (<Login/>);
+  }
   }
 }
 
